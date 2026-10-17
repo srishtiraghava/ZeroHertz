@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-base: #07191D;
+    --bg-surface: #0D252B;
+    --bg-secondary: #12343B;
+    --accent: #FF642D;
+    --accent-hover: #FF7A45;
+    --text-primary: #F4F3EF;
+    --text-muted: #9AAEB1;
+    --border-color: #29434A;
+    --status-success: #22C55E;
+    --status-warning: #F59E0B;
+    --status-error: #EF4444;
+  }
+
+  body {
+    background-color: #07191D;
+    color: #F4F3EF;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: 'Oswald', 'Inter', sans-serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* Custom scrollbars for industrial look */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #07191D;
+}
+::-webkit-scrollbar-thumb {
+  background: #29434A;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FF642D;
+}
+
+/* Radar / scanline grid aesthetic */
+.scanlines {
+  background: linear-gradient(
+    rgba(18, 52, 59, 0) 50%, 
+    rgba(7, 25, 29, 0.25) 50%
+  ), linear-gradient(
+    90deg,
+    rgba(255, 100, 45, 0.02),
+    rgba(255, 100, 45, 0.01)
+  );
+  background-size: 100% 4px, 6px 100%;
+}
+
+.radar-grid {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(41, 67, 74, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(41, 67, 74, 0.25) 1px, transparent 1px);
+}
+
+.pulse-border {
+  box-shadow: 0 0 12px rgba(255, 100, 45, 0.4);
+}

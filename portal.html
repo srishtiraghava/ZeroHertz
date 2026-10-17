@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZeroHertz Citizen Services Demo Portal</title>
+  <style>
+    :root {
+      --gov-blue: #0b3c6d;
+      --gov-light-blue: #1d70b8;
+      --gov-accent: #ff9933;
+      --gov-green: #138808;
+      --gov-bg: #f4f6f8;
+      --gov-card-bg: #ffffff;
+      --gov-text: #1b2733;
+      --gov-muted: #5a6872;
+      --gov-border: #cfd8dc;
+      --gov-error: #d32f2f;
+      --gov-success: #2e7d32;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--gov-bg);
+      color: var(--gov-text);
+      line-height: 1.5;
+    }
+
+    /* Simulation Notice Banner */
+    .sim-banner {
+      background-color: #fff3cd;
+      color: #856404;
+      border-bottom: 2px solid #ffeeba;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    /* Official Header */
+    header {
+      background-color: var(--gov-blue);
+      color: #ffffff;
+      border-bottom: 4px solid var(--gov-accent);
+      padding: 16px 24px;
+    }
+
+    .header-container {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .emblem-title {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .emblem-badge {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: var(--gov-blue);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      border: 2px solid var(--gov-accent);
+    }
+
+    .header-titles h1 {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .header-titles p {
+      font-size: 13px;
+      color: #b0c7de;
+    }
+
+    .secure-badge {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    /* Main Container */
+    main {
+      max-width: 960px;
+      margin: 32px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: var(--gov-card-bg);
+      border-radius: 6px;
+      border: 1px solid var(--gov-border);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 28px;
+    }
+
+    .card-header {
+      border-bottom: 1px solid var(--gov-border);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card-header h2 {
+      font-size: 20px;
+      color: var(--gov-blue);
+    }
+
+    .card-header p {
+      font-size: 14px;
+      color: var(--gov-muted);
+      margin-top: 4px;
+    }
+
+    /* Form Layout */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 680px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    label span.required {
+      color: var(--gov-error);
+      margin-left: 2px;
+    }
+
+    input[type="text"],
+    select {
+      height: 42px;
+      padding: 0 12px;
+      font-size: 14px;
+      border: 1px solid var(--gov-border);
+      border-radius: 4px;
+      background-color: #ffffff;
+      color: var(--gov-text);
+      transition: border-color 0.15s ease;
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--gov-light-blue);
+      box-shadow: 0 0 0 3px rgba(29, 112, 184, 0.15);
+    }
+
+    /* Acoustic Token Box */
+    .acoustic-box {
+      background-color: #f8fafc;
+      border: 2px dashed #94a3b8;
+      border-radius: 6px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .acoustic-box .hint {
+      font-size: 12px;
+      color: var(--gov-muted);
+    }
+
+    .acoustic-box input {
+      font-family: "Courier New", Courier, monospace;
+      font-weight: bold;
+      font-size: 18px;
+      letter-spacing: 2px;
+      background-color: #fff;
+    }
+
+    /* Buttons */
+    .action-bar {
+      margin-top: 28px;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 10px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--gov-light-blue);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--gov-blue);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background-color: #e2e8f0;
+      color: #334155;
+    }
+
+    .btn-secondary:hover {
+      background-color: #cbd5e1;
+    }
+
+    /* Feedback states */
+    .alert {
+      padding: 14px 16px;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .alert-error {
+      background-color: #fdeded;
+      color: #5f2120;
+      border: 1px solid #f5c6cb;
+    }
+
+    .alert-success {
+      background-color: #edf7ed;
+      color: #1e4620;
+      border: 1px solid #c3e6cb;
+    }
+
+    /* Success Receipt Modal/Panel */
+    #receipt-section {
+      display: none;
+      margin-top: 24px;
+      border-top: 2px dashed var(--gov-border);
+      padding-top: 24px;
+    }
+
+    .receipt-card {
+      background: #fafbfc;
+      border: 1px solid #bbf7d0;
+      border-left: 6px solid var(--gov-success);
+      padding: 24px;
+      border-radius: 4px;
+    }
+
+    .receipt-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .receipt-header h3 {
+      color: var(--gov-success);
+      font-size: 18px;
+    }
+
+    .receipt-id-tag {
+      font-family: monospace;
+      font-size: 16px;
+      background: #e2e8f0;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+
+    .receipt-details {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    .receipt-item label {
+      color: var(--gov-muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .receipt-item div {
+      font-weight: 600;
+      color: var(--gov-text);
+    }
+
+    /* Printable styles */
+    @media print {
+      body {
+        background: #fff;
+      }
+      .sim-banner, header, .form-grid, .action-bar, #error-message {
+        display: none !important;
+      }
+      #receipt-section {
+        display: block !important;
+        border: none;
+      }
+      .receipt-card {
+        border: 2px solid #000;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Simulation Watermark -->
+  <div class="sim-banner">
+    ⚠️ Demonstration & Simulation Environment — ZeroHertz Acoustic Transaction Test Bed
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-container">
+      <div class="emblem-title">
+        <div class="emblem-badge">0Hz</div>
+        <div class="header-titles">
+          <h1>Citizen Services Digital Interface</h1>
+          <p>National Acoustic-Verified Public Benefits Protocol</p>
+        </div>
+      </div>
+      <div class="secure-badge">
+        <span>🔒</span> Level-4 Acoustic Hardware Gate Active
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Form -->
+  <main>
+    <div class="card">
+      <div class="card-header">
+        <h2>Direct Benefit & Grievance Registration</h2>
+        <p>Complete beneficiary details below. Submission requires authorized acoustic confirmation signature token (#5).</p>
+      </div>
+
+      <form id="portal-form" onsubmit="handlePortalSubmit(event)">
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="beneficiary-id">Beneficiary ID / Aadhaar Hash <span class="required">*</span></label>
+            <input type="text" id="beneficiary-id" name="beneficiary_id" placeholder="e.g. BEN-98214" required>
+          </div>
+
+          <div class="form-group">
+            <label for="citizen-name">Citizen Full Name <span class="required">*</span></label>
+            <input type="text" id="citizen-name" name="citizen_name" placeholder="e.g. Ramesh Kumar" required>
+          </div>
+
+          <div class="form-group">
+            <label for="service-type">Service / Scheme Name <span class="required">*</span></label>
+            <input type="text" id="service-type" name="service_type" placeholder="e.g. Ration Card Renewal" required>
+          </div>
+
+          <div class="form-group">
+            <label for="priority-select">Urgency Level</label>
+            <select id="priority-select" name="priority">
+              <option value="Standard">Standard Processing (24-48h)</option>
+              <option value="Urgent">Urgent / Tatkal Processing</option>
+              <option value="Emergency">Emergency Public Aid</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="facility-select">Service Facility / Center <span class="required">*</span></label>
+            <select id="facility-select" name="facility_select" required>
+              <option value="">-- Select Center --</option>
+              <option value="Central Citizen Service Center">Central Citizen Service Center</option>
+              <option value="Panchayat Bhavan Service Desk">Panchayat Bhavan Service Desk</option>
+              <option value="District Civil Hospital">District Civil Hospital</option>
+              <option value="Sub-Divisional Magistrate Office">Sub-Divisional Magistrate Office</option>
+              <option value="Municipal Ward Office No. 4">Municipal Ward Office No. 4</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="department-select">Nodal Department <span class="required">*</span></label>
+            <select id="department-select" name="department_select" required>
+              <option value="">-- Select Department --</option>
+              <option value="Department of Food & Public Distribution">Department of Food & Public Distribution</option>
+              <option value="Department of Social Justice & Empowerment">Department of Social Justice & Empowerment</option>
+              <option value="Department of Health & Family Welfare">Department of Health & Family Welfare</option>
+              <option value="Department of Revenue & Land Records">Department of Revenue & Land Records</option>
+              <option value="Department of Municipal Administration">Department of Municipal Administration</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width acoustic-box">
+            <label for="acoustic-token-field">Acoustic Signature Token <span class="required">*</span></label>
+            <input type="text" id="acoustic-token-field" name="acoustic_token" placeholder="#5" required autocomplete="off">
+            <div class="hint">⚠️ Acoustic Gate: Submission will be rejected if this token does not match active authorized acoustic session signature.</div>
+          </div>
+
+        </div>
+
+        <div id="error-message" class="alert alert-error"></div>
+
+        <div class="action-bar">
+          <button type="reset" class="btn btn-secondary">Clear Form</button>
+          <button type="submit" id="submit-application-btn" class="btn btn-primary">
+            Submit Application
+          </button>
+        </div>
+      </form>
+
+      <!-- Receipt Section -->
+      <div id="receipt-section">
+        <div class="receipt-card">
+          <div class="receipt-header">
+            <h3>✓ Application Registered Successfully</h3>
+            <span class="receipt-id-tag" id="receipt-reference-id">REF-PENDING</span>
+          </div>
+          <div class="receipt-details">
+            <div class="receipt-item">
+              <label>Beneficiary ID</label>
+              <div id="rec-beneficiary">-</div>
+            </div>
+            <div class="receipt-item">
+              <label>Citizen Name</label>
+              <div id="rec-citizen">-</div>
+            </div>
+            <div class="receipt-item">
+              <label>Service Category</label>
+              <div id="rec-service">-</div>
+            </div>
+            <div class="receipt-item">
+              <label>Filing Timestamp</label>
+              <div id="rec-timestamp">-</div>
+            </div>
+          </div>
+          <div style="margin-top: 16px; display: flex; justify-content: flex-end;">
+            <button onclick="window.print()" class="btn btn-secondary">🖨️ Print Official Receipt</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    async function handlePortalSubmit(e) {
+      e.preventDefault();
+      const errBox = document.getElementById("error-message");
+      const submitBtn = document.getElementById("submit-application-btn");
+      const receiptSection = document.getElementById("receipt-section");
+
+      errBox.style.display = "none";
+      submitBtn.disabled = true;
+      submitBtn.innerText = "Verifying & Transacting...";
+
+      const payload = {
+        beneficiary_id: document.getElementById("beneficiary-id").value.trim(),
+        citizen_name: document.getElementById("citizen-name").value.trim(),
+        service_type: document.getElementById("service-type").value.trim(),
+        priority: document.getElementById("priority-select").value,
+        facility_select: document.getElementById("facility-select").value,
+        department_select: document.getElementById("department-select").value,
+        acoustic_token_field: document.getElementById("acoustic-token-field").value.trim()
+      };
+
+      try {
+        const res = await fetch("/api/portal/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(data.detail || data.message || "Failed to submit application");
+        }
+
+        // Display Receipt
+        document.getElementById("receipt-reference-id").innerText = data.receipt_reference_id;
+        document.getElementById("rec-beneficiary").innerText = data.beneficiary_id;
+        document.getElementById("rec-citizen").innerText = data.citizen_name;
+        document.getElementById("rec-service").innerText = data.service_type;
+        document.getElementById("rec-timestamp").innerText = new Date(data.timestamp).toLocaleString();
+
+        receiptSection.style.display = "block";
+        receiptSection.scrollIntoView({ behavior: "smooth" });
+      } catch (err) {
+        errBox.innerText = "Error: " + err.message;
+        errBox.style.display = "block";
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = "Submit Application";
+      }
+    }
+  </script>
+</body>
+</html>
