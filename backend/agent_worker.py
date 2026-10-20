@@ -99,7 +99,7 @@ def parse_intent_offline(prompt: str) -> IntentParsedData:
         # Match "Name Surname" after ID patterns
         r"(?:ID\s+\S+),?\s+([A-Z][a-z]+\s+[A-Z][a-z]+)",
     ]
-    citizen_name = ""  # Empty = not found
+    citizen_name = "Unknown Citizen"  # Fallback if no name found in prompt
     ignore_names = {"citizen name", "food supplies", "social welfare", "district hospital",
                     "ration card", "pension update", "bank freeze", "urgent service",
                     "standard service", "normal service"}

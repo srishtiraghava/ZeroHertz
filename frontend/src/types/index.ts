@@ -37,12 +37,22 @@ export type SessionState =
 export type InputChannel = 'speech' | 'acoustic_dtmf' | 'manual' | 'api';
 
 export interface ParsedIntent {
-  service: string;
-  language: 'hi' | 'en' | string;
+  // Backend fields (from IntentParsedData schema)
+  beneficiary_id?: string;
+  citizen_name?: string;
+  service_type?: string;
+  facility_select?: string;
+  department_select?: string;
+  priority?: string;
+  language_detected?: string;
+  raw_prompt?: string;
+  // Normalized convenience aliases
+  service?: string;
+  language?: 'hi' | 'en' | 'hinglish' | string;
   action?: string;
-  parameters: Record<string, any>;
+  parameters?: Record<string, any>;
   confidence: number;
-  schema_valid: boolean;
+  schema_valid?: boolean;
   validation_errors?: string[];
   raw_text?: string;
 }
@@ -87,7 +97,19 @@ export interface WebSocketEvent {
     | 'transaction_failed' 
     | 'audit_log' 
     | 'error' 
-    | 'heartbeat';
+    | 'heartbeat'
+    // Backend uppercase event types from EventType enum
+    | 'INTENT_PARSED'
+    | 'PORTAL_OPENED'
+    | 'FIELD_FILLED'
+    | 'WAITING_FOR_ACOUSTIC_SIGNATURE'
+    | 'ACOUSTIC_SIGNATURE_VERIFIED'
+    | 'ACOUSTIC_SIGNATURE_REJECTED'
+    | 'SUBMITTED'
+    | 'TRANSACTION_FAILED'
+    | 'SESSION_CANCELLED'
+    | 'DTMF_KEY_DETECTED'
+    | string; // allow future event types without crashing
   timestamp: string;
   session_id?: string;
   payload: any;
@@ -137,33 +159,43 @@ export interface TransactionEvent {
 }
 
 export interface Transaction {
-  id: string;
+  // Backend fields (from TransactionDetail schema)
+  transaction_id: string;
   session_id: string;
-  service_type: string;
-  citizen_id?: string; // sensitive
-  account_number?: string; // sensitive
-  phone_number?: string; // sensitive
-  recipient?: string;
-  amount?: string | number;
-  details: Record<string, any>;
   status: TransactionStatus;
+  payload_json: string;  // JSON string of form data
+  receipt_reference_id?: string;
   created_at: string;
+  updated_at: string;
+  // Normalized convenience aliases (populated by useApi normalizer)
+  id?: string;
+  service_type?: string;
+  citizen_id?: string;
+  account_number?: string;
+  phone_number?: string;
+  recipient?: string;
   completed_at?: string;
   receipt_id?: string;
   confirmation_token?: string;
-  events: TransactionEvent[];
+  details?: Record<string, any>;
+  events?: TransactionEvent[];
 }
 
 // Audit Ledger
 export interface AuditLogEntry {
-  id: string;
-  timestamp: string;
-  session_id: string;
+  // Backend fields (from AuditEventItem schema)
+  id: string | number;
   event_type: string;
-  packet_hash: string;
-  verification_outcome: 'SUCCESS' | 'FAILURE' | 'PENDING' | 'REJECTED';
-  portal_action: string;
-  transaction_outcome: string;
+  session_id?: string;
+  payload_json: string;
+  prev_hash: string;
+  current_hash: string;
+  timestamp: string;
+  // Normalized display fields (derived from above by useApi)
+  packet_hash?: string;
+  verification_outcome?: 'SUCCESS' | 'FAILURE' | 'PENDING' | 'REJECTED';
+  portal_action?: string;
+  transaction_outcome?: string;
   payload?: Record<string, any>;
 }
 

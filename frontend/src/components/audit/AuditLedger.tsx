@@ -56,7 +56,10 @@ export const AuditLedger: React.FC = () => {
         timestamp: latestWsAudit.timestamp || new Date().toISOString(),
         session_id: latestWsAudit.session_id || p.session_id || 'UNKNOWN',
         event_type: p.event_type || 'ACOUSTIC_VERIFY',
-        packet_hash: p.packet_hash || 'SHA256:0hz' + Math.random().toString(36).slice(2, 12),
+        payload_json: JSON.stringify(p),
+        prev_hash: p.prev_hash || '',
+        current_hash: p.current_hash || '',
+        packet_hash: p.current_hash || p.packet_hash || 'SHA256:0hz' + Math.random().toString(36).slice(2, 12),
         verification_outcome: p.verification_outcome || 'SUCCESS',
         portal_action: p.portal_action || 'FORM_SUBMIT',
         transaction_outcome: p.transaction_outcome || 'COMMITTED',
@@ -81,16 +84,16 @@ export const AuditLedger: React.FC = () => {
     return auditEntries.filter((item) => {
       if (search.trim()) {
         const q = search.toLowerCase();
-        const matchesSession = item.session_id.toLowerCase().includes(q);
+        const matchesSession = (item.session_id || '').toLowerCase().includes(q);
         const matchesEvent = item.event_type.toLowerCase().includes(q);
-        const matchesHash = item.packet_hash.toLowerCase().includes(q);
-        const matchesAction = item.portal_action.toLowerCase().includes(q);
+        const matchesHash = (item.packet_hash || item.current_hash || '').toLowerCase().includes(q);
+        const matchesAction = (item.portal_action || '').toLowerCase().includes(q);
         if (!matchesSession && !matchesEvent && !matchesHash && !matchesAction) {
           return false;
         }
       }
 
-      if (outcomeFilter !== 'all' && item.verification_outcome !== outcomeFilter) {
+      if (outcomeFilter !== 'all' && (item.verification_outcome || 'SUCCESS') !== outcomeFilter) {
         return false;
       }
 
@@ -201,7 +204,7 @@ export const AuditLedger: React.FC = () => {
                           {formatDateTime(entry.timestamp)}
                         </td>
                         <td className="py-3 px-3 text-[#F4F3EF] font-bold">
-                          {entry.session_id.slice(0, 8)}
+                          {(entry.session_id || 'SYSTEM').slice(0, 8)}
                         </td>
                         <td className="py-3 px-3 text-[#FF642D] font-semibold">
                           {entry.event_type}
@@ -210,32 +213,32 @@ export const AuditLedger: React.FC = () => {
                           <span
                             onClick={(e) => {
                               e.stopPropagation();
-                              copyToClipboard(entry.packet_hash);
+                              copyToClipboard(entry.packet_hash || entry.current_hash || '');
                             }}
                             className="inline-flex items-center gap-1 hover:text-[#FF642D] cursor-copy bg-[#07191D] px-1.5 py-0.5 rounded border border-[#29434A]"
                             title="Click to copy full cryptographic hash"
                           >
                             <Key className="w-2.5 h-2.5" />
-                            {formatHash(entry.packet_hash, 10)}
+                            {formatHash(entry.packet_hash || entry.current_hash || '', 10)}
                           </span>
                         </td>
                         <td className="py-3 px-3">
-                          <StatusBadge status={entry.verification_outcome} />
+                          <StatusBadge status={entry.verification_outcome || 'SUCCESS'} />
                         </td>
                         <td className="py-3 px-3 text-[#9AAEB1] truncate max-w-[120px]">
-                          {entry.portal_action}
+                          {entry.portal_action || entry.event_type}
                         </td>
                         <td className="py-3 px-3 font-bold text-[11px]">
                           <span
                             className={
-                              entry.transaction_outcome === 'COMMITTED' || entry.transaction_outcome === 'SUCCESS'
+                              (entry.transaction_outcome === 'COMMITTED' || entry.transaction_outcome === 'SUCCESS')
                                 ? 'text-[#22C55E]'
                                 : entry.transaction_outcome === 'FAILED'
                                 ? 'text-red-400'
                                 : 'text-amber-400'
                             }
                           >
-                            {entry.transaction_outcome}
+                            {entry.transaction_outcome || 'COMMITTED'}
                           </span>
                         </td>
                       </tr>
@@ -256,7 +259,7 @@ export const AuditLedger: React.FC = () => {
                 Event Payload Inspector
               </span>
               {selectedEntry && (
-                <StatusBadge status={selectedEntry.verification_outcome} />
+                <StatusBadge status={selectedEntry.verification_outcome || 'SUCCESS'} />
               )}
             </div>
 
@@ -273,7 +276,7 @@ export const AuditLedger: React.FC = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-[#9AAEB1]">Session ID:</span>
-                    <span className="text-[#FF642D] font-bold">{selectedEntry.session_id}</span>
+                    <span className="text-[#FF642D] font-bold">{selectedEntry.session_id || 'SYSTEM'}</span>
                   </div>
                 </div>
 
@@ -282,10 +285,10 @@ export const AuditLedger: React.FC = () => {
                   <div className="flex items-center justify-between text-[#9AAEB1] mb-1">
                     <span className="text-[10px] uppercase">Cryptographic Packet Hash:</span>
                     <button
-                      onClick={() => copyToClipboard(selectedEntry.packet_hash)}
+                      onClick={() => copyToClipboard(selectedEntry.packet_hash || selectedEntry.current_hash || '')}
                       className="text-[#FF642D] hover:text-[#FF7A45] flex items-center gap-1 text-[10px]"
                     >
-                      {copiedHash === selectedEntry.packet_hash ? (
+                      {copiedHash === (selectedEntry.packet_hash || selectedEntry.current_hash) ? (
                         <>
                           <Check className="w-3 h-3 text-[#22C55E]" /> Copied!
                         </>
@@ -297,7 +300,7 @@ export const AuditLedger: React.FC = () => {
                     </button>
                   </div>
                   <div className="text-[11px] text-[#22C55E] break-all bg-[#0D252B] p-2 rounded border border-[#29434A]">
-                    {selectedEntry.packet_hash}
+                    {selectedEntry.packet_hash || selectedEntry.current_hash || '—'}
                   </div>
                 </div>
 

@@ -54,10 +54,11 @@ export const TransactionHistory: React.FC = () => {
         // Search query
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();
-          const matchesId = tx.id.toLowerCase().includes(q);
+          const txId = tx.id || tx.transaction_id;
+          const matchesId = txId.toLowerCase().includes(q);
           const matchesSession = tx.session_id.toLowerCase().includes(q);
-          const matchesService = tx.service_type.toLowerCase().includes(q);
-          const matchesRecipient = tx.recipient ? tx.recipient.toLowerCase().includes(q) : false;
+          const matchesService = (tx.service_type || '').toLowerCase().includes(q);
+          const matchesRecipient = (tx.details as any)?.citizen_name ? (tx.details as any).citizen_name.toLowerCase().includes(q) : false;
           if (!matchesId && !matchesSession && !matchesService && !matchesRecipient) {
             return false;
           }
@@ -69,7 +70,7 @@ export const TransactionHistory: React.FC = () => {
         }
 
         // Service filter
-        if (serviceFilter !== 'all' && tx.service_type !== serviceFilter) {
+        if (serviceFilter !== 'all' && (tx.service_type || '') !== serviceFilter) {
           return false;
         }
 
@@ -221,20 +222,20 @@ export const TransactionHistory: React.FC = () => {
             ) : (
               paginatedTransactions.map((tx) => (
                 <tr
-                  key={tx.id}
+                  key={tx.transaction_id || tx.id}
                   onClick={() => setSelectedTx(tx)}
                   className="hover:bg-[#12343B] transition-colors cursor-pointer group"
                 >
                   <td className="py-3 px-3 text-[#FF642D] font-bold group-hover:underline">
-                    {tx.id}
+                    {tx.id || tx.transaction_id}
                   </td>
                   <td className="py-3 px-3 text-[#9AAEB1]">{tx.session_id.slice(0, 10)}</td>
                   <td className="py-3 px-3 text-[#F4F3EF] uppercase font-semibold">
-                    {tx.service_type}
+                    {tx.service_type || '—'}
                   </td>
                   <td className="py-3 px-3 text-[#9AAEB1] flex items-center gap-1.5">
                     <Lock className="w-3 h-3 text-[#22C55E]" />
-                    {redactSensitive(tx.citizen_id || '982348194481')}
+                    {redactSensitive(tx.citizen_id || (tx.details as any)?.beneficiary_id || '982348194481')}
                   </td>
                   <td className="py-3 px-3">
                     <StatusBadge status={tx.status} />
@@ -243,7 +244,7 @@ export const TransactionHistory: React.FC = () => {
                     {formatDateTime(tx.created_at)}
                   </td>
                   <td className="py-3 px-3 text-[#22C55E] font-bold">
-                    {tx.receipt_id || '—'}
+                    {(tx as any).receipt_id || tx.receipt_reference_id || '—'}
                   </td>
                 </tr>
               ))

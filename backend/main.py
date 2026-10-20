@@ -143,6 +143,27 @@ async def serve_root():
 # Health & Diagnostics Endpoints
 # ---------------------------------------------------------------------------
 
+@app.get("/api/metrics")
+async def get_metrics():
+    """Aggregate dashboard metrics from persistent database state."""
+    rows = db.list_sessions(limit=1000)
+    txs = db.list_transactions(limit=1000)
+    completed = sum(1 for t in txs if t.get("status") == "COMPLETED")
+    failed = sum(1 for t in txs if t.get("status") in ("FAILED", "REJECTED"))
+    pending_confirm = sum(
+        1 for s in rows
+        if s.get("status") in ("INITIALIZED", "WAITING_FOR_ACOUSTIC_CONFIRMATION", "CONFIRMED")
+    )
+    return {
+        "acoustic_engine_state": "idle",
+        "mic_connection_state": "inactive",
+        "backend_state": "connected",
+        "pending_confirmation_count": pending_confirm,
+        "total_sessions": len(rows),
+        "completed_transactions": completed,
+        "failed_rejected_transactions": failed,
+    }
+
 @app.get("/api/health", response_model=HealthResponse)
 async def get_health():
     """Liveness and readiness health probe."""
@@ -413,6 +434,39 @@ async def cancel_session(session_id: str):
         status=SessionStatus.CANCELLED,
         message=msg,
     )
+
+
+@app.post("/api/sessions/{session_id}/retry")
+async def retry_session(session_id: str):
+    """Re-initiate workflow for a failed or expired session using the stored intent."""
+    session = db.get_session(session_id)
+    if not session:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Session '{session_id}' not found")
+
+    # Re-parse from the stored intent result
+    intent_rows = db.get_intent_for_session(session_id) if hasattr(db, 'get_intent_for_session') else []
+    prompt = "Retry: Please re-process previous citizen request."
+    if intent_rows:
+        prompt = intent_rows[0].get("raw_prompt", prompt)
+    elif session.get("service_type"):
+        prompt = f"Process {session['service_type']} for beneficiary {session['beneficiary_id']}"
+
+    try:
+        new_sid, parsed, challenge, expires_at = await initiate_session_workflow(
+            prompt=prompt,
+            # Issue new session ID to avoid replay collision
+        )
+        return {
+            "success": True,
+            "new_session_id": new_sid,
+            "session_id": session_id,
+            "message": f"Retry initiated as new session {new_sid}",
+            "challenge_token": challenge,
+            "expires_at": expires_at,
+        }
+    except Exception as e:
+        logger.error("Retry session error: %s", e, exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 # ---------------------------------------------------------------------------

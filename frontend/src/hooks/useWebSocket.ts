@@ -68,6 +68,162 @@ export function useWebSocket() {
               }
               break;
 
+            // Backend event: intent successfully parsed, portal workflow initiated
+            case 'INTENT_PARSED':
+              if (data.payload) {
+                dispatch({
+                  type: 'UPDATE_SESSION',
+                  payload: {
+                    workflow_stage: 'Intent parsed',
+                    workflow_step: 2,
+                    state: 'automating',
+                    intent: data.payload.parsed_intent,
+                  },
+                });
+              }
+              break;
+
+            // Backend event: portal browser opened
+            case 'PORTAL_OPENED':
+              if (data.payload) {
+                dispatch({
+                  type: 'UPDATE_SESSION',
+                  payload: {
+                    workflow_stage: 'Portal opened',
+                    workflow_step: 3,
+                    state: 'automating',
+                    automation_log: [
+                      ...(state.activeSession?.automation_log || []),
+                      `Portal opened: ${data.payload.portal_url || 'citizen portal'}`,
+                    ],
+                  },
+                });
+              }
+              break;
+
+            // Backend event: a form field was filled
+            case 'FIELD_FILLED':
+              if (data.payload) {
+                dispatch({
+                  type: 'UPDATE_SESSION',
+                  payload: {
+                    workflow_stage: 'Fields populated',
+                    workflow_step: 4,
+                    state: 'automating',
+                    automation_log: [
+                      ...(state.activeSession?.automation_log || []),
+                      `Field filled: ${data.payload.field} = "${data.payload.value}"`,
+                    ],
+                  },
+                });
+              }
+              break;
+
+            // Backend event: confirmation gate hit — waiting for acoustic auth
+            case 'WAITING_FOR_ACOUSTIC_SIGNATURE':
+              dispatch({
+                type: 'UPDATE_SESSION',
+                payload: {
+                  state: 'awaiting_confirmation',
+                  workflow_stage: 'Awaiting confirmation',
+                  workflow_step: 5,
+                  acoustic_confirmation: {
+                    expected_symbol: '#5',
+                  },
+                },
+              });
+              dispatch({
+                type: 'UPDATE_METRICS',
+                payload: {
+                  pending_confirmation_count: (state.metrics.pending_confirmation_count || 0) + 1,
+                },
+              });
+              break;
+
+            // Backend event: acoustic signature verified
+            case 'ACOUSTIC_SIGNATURE_VERIFIED':
+              if (data.payload) {
+                dispatch({
+                  type: 'UPDATE_SESSION',
+                  payload: {
+                    state: 'confirmed',
+                    workflow_stage: 'Confirmation verified',
+                    workflow_step: 6,
+                    acoustic_confirmation: {
+                      ...state.activeSession?.acoustic_confirmation,
+                      verified: true,
+                      code: data.payload.signature,
+                      confidence: 1.0,
+                    },
+                    automation_log: [
+                      ...(state.activeSession?.automation_log || []),
+                      `Acoustic token verified: ${data.payload.signature}`,
+                    ],
+                  },
+                });
+                dispatch({
+                  type: 'UPDATE_METRICS',
+                  payload: {
+                    pending_confirmation_count: Math.max(0, (state.metrics.pending_confirmation_count || 1) - 1),
+                  },
+                });
+              }
+              break;
+
+            // Backend event: acoustic signature rejected
+            case 'ACOUSTIC_SIGNATURE_REJECTED':
+              if (data.payload) {
+                dispatch({
+                  type: 'UPDATE_SESSION',
+                  payload: {
+                    error_message: data.payload.reason || 'Acoustic signature rejected',
+                    automation_log: [
+                      ...(state.activeSession?.automation_log || []),
+                      `REJECTED: ${data.payload.reason || 'Invalid token'}`,
+                    ],
+                  },
+                });
+              }
+              break;
+
+            // Backend event: transaction submitted to portal
+            case 'SUBMITTED':
+              if (data.payload) {
+                dispatch({
+                  type: 'UPDATE_SESSION',
+                  payload: {
+                    state: 'completed',
+                    workflow_stage: 'Submission completed',
+                    workflow_step: 7,
+                    portal_preview_url: data.payload.receipt_url || state.activeSession?.portal_preview_url,
+                    automation_log: [
+                      ...(state.activeSession?.automation_log || []),
+                      `SUBMITTED — Receipt: ${data.payload.receipt_reference_id}`,
+                      `Transaction ID: ${data.payload.transaction_id}`,
+                    ],
+                  },
+                });
+                dispatch({
+                  type: 'UPDATE_METRICS',
+                  payload: {
+                    completed_transactions: (state.metrics.completed_transactions || 0) + 1,
+                  },
+                });
+              }
+              break;
+
+            // Backend event: session cancelled
+            case 'SESSION_CANCELLED':
+              dispatch({
+                type: 'UPDATE_SESSION',
+                payload: {
+                  state: 'cancelled',
+                  workflow_stage: 'Idle',
+                },
+              });
+              break;
+
+            // Legacy / alternative event type names (kept for backward compat)
             case 'workflow_update':
               if (data.payload) {
                 dispatch({
@@ -85,6 +241,7 @@ export function useWebSocket() {
               break;
 
             case 'dtmf_detected':
+            case 'DTMF_KEY_DETECTED':
               if (data.payload) {
                 dispatch({ type: 'ADD_DTMF_DETECTION', payload: data.payload });
                 if (state.activeSession) {
@@ -93,7 +250,7 @@ export function useWebSocket() {
                     payload: {
                       acoustic_confirmation: {
                         ...state.activeSession.acoustic_confirmation,
-                        received_code: data.payload.symbol,
+                        received_code: data.payload.symbol || data.payload.key,
                         confidence: data.payload.confidence,
                         timestamp: data.timestamp || new Date().toISOString(),
                       },
@@ -110,9 +267,9 @@ export function useWebSocket() {
                   payload: {
                     state: 'awaiting_confirmation',
                     workflow_stage: 'Awaiting confirmation',
-                    workflow_step: 4,
+                    workflow_step: 5,
                     acoustic_confirmation: {
-                      expected_symbol: data.payload.expected_code || data.payload.code || '5',
+                      expected_symbol: data.payload.expected_code || data.payload.code || '#5',
                     },
                   },
                 });
@@ -132,7 +289,7 @@ export function useWebSocket() {
                   payload: {
                     state: 'confirmed',
                     workflow_stage: 'Confirmation verified',
-                    workflow_step: 5,
+                    workflow_step: 6,
                     acoustic_confirmation: {
                       ...state.activeSession?.acoustic_confirmation,
                       verified: true,

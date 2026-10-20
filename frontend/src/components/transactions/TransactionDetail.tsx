@@ -77,15 +77,15 @@ export const TransactionDetail: React.FC<TransactionDetailProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1 text-[11px]">
               <div>
                 <span className="text-[#9AAEB1] block text-[10px]">CITIZEN ID / AADHAAR</span>
-                <span className="text-[#F4F3EF]">{redactSensitive(transaction.citizen_id || '982348194481')}</span>
+                <span className="text-[#F4F3EF]">{redactSensitive(transaction.citizen_id || (transaction.details as any)?.beneficiary_id || '982348194481')}</span>
               </div>
               <div>
                 <span className="text-[#9AAEB1] block text-[10px]">ACCOUNT / REF</span>
-                <span className="text-[#F4F3EF]">{redactSensitive(transaction.account_number || '4029104819')}</span>
+                <span className="text-[#F4F3EF]">{redactSensitive((transaction as any).account_number || (transaction.details as any)?.beneficiary_id || '4029104819')}</span>
               </div>
               <div>
                 <span className="text-[#9AAEB1] block text-[10px]">PHONE</span>
-                <span className="text-[#F4F3EF]">{redactSensitive(transaction.phone_number || '9876543210')}</span>
+                <span className="text-[#F4F3EF]">{redactSensitive((transaction as any).phone_number || '9876543210')}</span>
               </div>
             </div>
           </div>
@@ -99,13 +99,13 @@ export const TransactionDetail: React.FC<TransactionDetailProps> = ({
             <div>
               <span className="text-[#9AAEB1] block text-[10px]">COMPLETED AT</span>
               <span className="text-[#F4F3EF] text-[11px]">
-                {transaction.completed_at ? formatDateTime(transaction.completed_at) : '—'}
+                {(transaction as any).completed_at ? formatDateTime((transaction as any).completed_at) : formatDateTime(transaction.updated_at)}
               </span>
             </div>
             <div>
               <span className="text-[#9AAEB1] block text-[10px]">RECEIPT ID</span>
               <span className="text-[#22C55E] font-bold text-[11px]">
-                {transaction.receipt_id || 'RCPT-PENDING'}
+                {(transaction as any).receipt_id || transaction.receipt_reference_id || 'RCPT-PENDING'}
               </span>
             </div>
           </div>

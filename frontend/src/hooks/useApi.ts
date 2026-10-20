@@ -51,14 +51,45 @@ export function useApi() {
     return await fetchWithHandling('/api/metrics');
   }, []);
 
-  // Transactions
+  // Transactions — backend returns TransactionDetail array with transaction_id (not id)
   const getTransactions = useCallback(async (): Promise<Transaction[]> => {
-    return await fetchWithHandling('/api/transactions');
+    const data = await fetchWithHandling('/api/transactions');
+    const rows = Array.isArray(data) ? data : [];
+    return rows.map((t: any) => ({
+      ...t,
+      // Normalize transaction_id → id for frontend display
+      id: t.transaction_id || t.id,
+      // Parse payload_json to extract service_type, citizen_name, etc.
+      service_type: (() => { try { return JSON.parse(t.payload_json || '{}').service_type || 'Unknown Service'; } catch { return 'Unknown Service'; } })(),
+      details: (() => { try { return JSON.parse(t.payload_json || '{}'); } catch { return {}; } })(),
+      citizen_id: (() => { try { return JSON.parse(t.payload_json || '{}').beneficiary_id || ''; } catch { return ''; } })(),
+      // Normalize status to lowercase
+      status: (t.status || 'pending').toLowerCase(),
+      events: t.events || [],
+    }));
   }, []);
 
-  // Audit Ledger
+  // Audit Ledger — backend returns AuditListResponse with .events array
   const getAuditLogs = useCallback(async (): Promise<AuditLogEntry[]> => {
-    return await fetchWithHandling('/api/audit');
+    const res = await fetchWithHandling('/api/audit');
+    // Backend wraps in { events: [], chain_valid: bool, total_records: int }
+    const events = Array.isArray(res) ? res : (res?.events || []);
+    // Normalize backend fields to our AuditLogEntry shape
+    return events.map((e: any) => ({
+      id: e.id,
+      event_type: e.event_type,
+      session_id: e.session_id || 'SYSTEM',
+      payload_json: e.payload_json || '{}',
+      prev_hash: e.prev_hash || '',
+      current_hash: e.current_hash || '',
+      timestamp: e.timestamp,
+      // Derived convenience fields for display
+      packet_hash: e.current_hash || e.packet_hash || '',
+      verification_outcome: 'SUCCESS' as const,
+      portal_action: e.event_type || 'AUDIT',
+      transaction_outcome: 'COMMITTED',
+      payload: (() => { try { return JSON.parse(e.payload_json || '{}'); } catch { return {}; } })(),
+    }));
   }, []);
 
   // Diagnostics
@@ -75,15 +106,34 @@ export function useApi() {
     }): Promise<{
       success: boolean;
       session_id: string;
+      // Backend returns parsed_intent; we alias to intent for frontend convenience
+      parsed_intent: ParsedIntent;
       intent: ParsedIntent;
       workflow_stage: string;
       workflow_step: number;
       message?: string;
+      challenge_token?: string;
+      expires_at?: string;
+      portal_preview_url?: string;
     }> => {
-      return await fetchWithHandling('/api/execute-intent', {
+      // Backend expects `prompt` not `transcript`
+      const body = {
+        prompt: payload.transcript,
+        ...(payload.context || {}),
+      };
+      const raw = await fetchWithHandling('/api/execute-intent', {
         method: 'POST',
-        body: JSON.stringify(payload),
+        body: JSON.stringify(body),
       });
+      // Normalize: backend calls it parsed_intent, frontend calls it intent
+      return {
+        ...raw,
+        intent: raw.parsed_intent || raw.intent,
+        session_id: raw.session_id,
+        workflow_stage: raw.status || 'INITIALIZED',
+        workflow_step: 2,
+        success: true,
+      };
     },
     []
   );
@@ -106,28 +156,26 @@ export function useApi() {
       return await fetchWithHandling('/api/dsp/decode', {
         method: 'POST',
         body: JSON.stringify({
-          pcm_base64: base64PCM,
+          audio_base64: base64PCM,   // Backend field is audio_base64 not pcm_base64
           sample_rate: sampleRate,
-          bit_depth: 16,
+          audio_format: 'pcm_s16le',
         }),
       });
     },
     []
   );
 
-  // Cancel Session
+  // Cancel Session — backend uses path param: POST /api/sessions/{id}/cancel
   const cancelSession = useCallback(async (sessionId: string) => {
-    return await fetchWithHandling('/api/session/cancel', {
+    return await fetchWithHandling(`/api/sessions/${encodeURIComponent(sessionId)}/cancel`, {
       method: 'POST',
-      body: JSON.stringify({ session_id: sessionId }),
     });
   }, []);
 
-  // Retry Session
+  // Retry Session — restart workflow by re-executing the stored session intent
   const retrySession = useCallback(async (sessionId: string) => {
-    return await fetchWithHandling('/api/session/retry', {
+    return await fetchWithHandling(`/api/sessions/${encodeURIComponent(sessionId)}/retry`, {
       method: 'POST',
-      body: JSON.stringify({ session_id: sessionId }),
     });
   }, []);
 
