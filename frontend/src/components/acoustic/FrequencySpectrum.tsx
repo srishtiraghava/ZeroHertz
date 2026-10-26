@@ -35,11 +35,11 @@ export const FrequencySpectrum: React.FC<FrequencySpectrumProps> = ({
       const height = canvas.height;
 
       // Clear with dark petroleum background
-      ctx.fillStyle = '#07191D';
+      ctx.fillStyle = '#f4f5f2';
       ctx.fillRect(0, 0, width, height);
 
       // Draw subtle radar/oscilloscope grid
-      ctx.strokeStyle = '#12343B';
+      ctx.strokeStyle = '#f0f3ef';
       ctx.lineWidth = 1;
       const gridStepsY = 4;
       for (let i = 1; i < gridStepsY; i++) {
@@ -95,7 +95,7 @@ export const FrequencySpectrum: React.FC<FrequencySpectrumProps> = ({
         ctx.fill();
 
         // Draw top glowing trace stroke
-        ctx.strokeStyle = '#FF642D';
+        ctx.strokeStyle = '#bd5e3b';
         ctx.lineWidth = 1.8;
         ctx.beginPath();
         for (let x = 0; x < width; x++) {
@@ -138,7 +138,7 @@ export const FrequencySpectrum: React.FC<FrequencySpectrumProps> = ({
           ctx.beginPath();
           ctx.setLineDash(isActive ? [] : [2, 3]);
           ctx.strokeStyle = isActive
-            ? '#FF642D'
+            ? '#bd5e3b'
             : group === 'low'
             ? 'rgba(245, 158, 11, 0.45)'
             : 'rgba(34, 197, 94, 0.45)';
@@ -149,7 +149,7 @@ export const FrequencySpectrum: React.FC<FrequencySpectrumProps> = ({
           ctx.setLineDash([]);
 
           // Frequency label tag
-          ctx.fillStyle = isActive ? '#FF642D' : group === 'low' ? '#F59E0B' : '#22C55E';
+          ctx.fillStyle = isActive ? '#bd5e3b' : group === 'low' ? '#F59E0B' : '#28734f';
           ctx.font = '9px "JetBrains Mono", monospace';
           ctx.textAlign = 'center';
           ctx.fillText(`${freq}Hz`, x, 12);
@@ -158,7 +158,7 @@ export const FrequencySpectrum: React.FC<FrequencySpectrumProps> = ({
           if (isActive) {
             ctx.beginPath();
             ctx.arc(x, height - 10, 3, 0, Math.PI * 2);
-            ctx.fillStyle = '#FF642D';
+            ctx.fillStyle = '#bd5e3b';
             ctx.fill();
           }
         }
@@ -175,11 +175,11 @@ export const FrequencySpectrum: React.FC<FrequencySpectrumProps> = ({
   }, [analyserNode, audioContext, isCapturing]);
 
   return (
-    <div className="bg-[#07191D] border border-[#29434A] rounded p-3 relative flex flex-col">
-      <div className="flex items-center justify-between text-xs font-mono text-[#9AAEB1] mb-2">
+    <div className="bg-[#f4f5f2] border border-[#dce3df] rounded p-3 relative flex flex-col">
+      <div className="flex items-center justify-between text-xs font-mono text-[#667773] mb-2">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#FF642D]" />
-          <span className="uppercase tracking-wider font-bold text-[#F4F3EF]">
+          <span className="w-2 h-2 rounded-full bg-[#bd5e3b]" />
+          <span className="uppercase tracking-wider font-bold text-[#20312e]">
             Real-time FFT Frequency Spectrum (400Hz - 2000Hz)
           </span>
         </div>
@@ -188,15 +188,15 @@ export const FrequencySpectrum: React.FC<FrequencySpectrumProps> = ({
             <span className="w-2 h-0.5 bg-[#F59E0B]" /> Low Group (Row)
           </span>
           <span className="flex items-center gap-1">
-            <span className="w-2 h-0.5 bg-[#22C55E]" /> High Group (Col)
+            <span className="w-2 h-0.5 bg-[#28734f]" /> High Group (Col)
           </span>
-          <span className="text-[#9AAEB1]">
+          <span className="text-[#667773]">
             SR: {audioContext?.sampleRate ? `${(audioContext.sampleRate / 1000).toFixed(1)}kHz` : '44.1kHz'}
           </span>
         </div>
       </div>
 
-      <div className="relative w-full h-44 bg-[#07191D] rounded overflow-hidden border border-[#12343B]">
+      <div className="relative w-full h-44 bg-[#f4f5f2] rounded overflow-hidden border border-[#f0f3ef]">
         <canvas
           ref={canvasRef}
           width={800}
@@ -204,7 +204,7 @@ export const FrequencySpectrum: React.FC<FrequencySpectrumProps> = ({
           className="w-full h-full block"
         />
         {!isCapturing && (
-          <div className="absolute inset-0 bg-[#07191D]/80 flex items-center justify-center font-mono text-xs text-[#9AAEB1]">
+          <div className="absolute inset-0 bg-[#f4f5f2]/80 flex items-center justify-center font-mono text-xs text-[#667773]">
             Microphone Ingest Inactive — Enable Audio Capture Below to View FFT Spectrum
           </div>
         )}

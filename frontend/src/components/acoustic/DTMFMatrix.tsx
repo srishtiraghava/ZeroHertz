@@ -25,17 +25,17 @@ export const DTMFMatrix: React.FC<DTMFMatrixProps> = ({
   const activeSymbol = activeTransmitSymbol || latestDetection?.symbol;
 
   return (
-    <div className="bg-[#0D252B] border border-[#29434A] rounded p-4 flex flex-col justify-between">
+    <div className="bg-[#ffffff] border border-[#dce3df] rounded p-4 flex flex-col justify-between">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-[#29434A] pb-3 mb-4">
+      <div className="flex items-center justify-between border-b border-[#dce3df] pb-3 mb-4">
         <div className="flex items-center gap-2">
-          <Radio className="w-4 h-4 text-[#FF642D]" />
-          <h3 className="font-display text-sm tracking-wide text-[#F4F3EF]">
+          <Radio className="w-4 h-4 text-[#bd5e3b]" />
+          <h3 className="font-display text-sm tracking-wide text-[#20312e]">
             DTMF Standard 4x4 Matrix
           </h3>
         </div>
         {latestDetection && (
-          <span className="text-xs font-mono text-[#22C55E] flex items-center gap-1 bg-[#12343B] px-2 py-0.5 rounded border border-[#29434A]">
+          <span className="text-xs font-mono text-[#28734f] flex items-center gap-1 bg-[#f0f3ef] px-2 py-0.5 rounded border border-[#dce3df]">
             <ShieldCheck className="w-3.5 h-3.5" />
             CONF: {formatConfidence(latestDetection.confidence)}
           </span>
@@ -47,7 +47,7 @@ export const DTMFMatrix: React.FC<DTMFMatrixProps> = ({
         <div className="min-w-[280px]">
           {/* Column Frequencies Header */}
           <div className="grid grid-cols-5 gap-1.5 text-center mb-1 text-[10px] font-mono">
-            <div className="text-[#9AAEB1]/60 flex items-center justify-center">Hz \ Hz</div>
+            <div className="text-[#667773]/60 flex items-center justify-center">Hz \ Hz</div>
             {DTMF_COL_FREQUENCIES.map((colFreq) => {
               const isColActive = activeColFreq === colFreq;
               return (
@@ -55,8 +55,8 @@ export const DTMFMatrix: React.FC<DTMFMatrixProps> = ({
                   key={colFreq}
                   className={`py-1 rounded font-bold transition-colors ${
                     isColActive
-                      ? 'bg-[#22C55E]/20 text-[#22C55E] border border-[#22C55E]/60'
-                      : 'bg-[#07191D] text-[#22C55E]/80 border border-[#29434A]/50'
+                      ? 'bg-[#28734f]/20 text-[#28734f] border border-[#28734f]/60'
+                      : 'bg-[#f4f5f2] text-[#28734f]/80 border border-[#dce3df]/50'
                   }`}
                 >
                   {colFreq}
@@ -77,7 +77,7 @@ export const DTMFMatrix: React.FC<DTMFMatrixProps> = ({
                   className={`flex items-center justify-center text-[10px] font-mono font-bold py-2 rounded transition-colors ${
                     isRowActive
                       ? 'bg-[#F59E0B]/20 text-[#F59E0B] border border-[#F59E0B]/60'
-                      : 'bg-[#07191D] text-[#F59E0B]/80 border border-[#29434A]/50'
+                      : 'bg-[#f4f5f2] text-[#F59E0B]/80 border border-[#dce3df]/50'
                   }`}
                 >
                   {rowFreq}
@@ -98,14 +98,14 @@ export const DTMFMatrix: React.FC<DTMFMatrixProps> = ({
                       key={sym}
                       className={`relative flex flex-col items-center justify-center py-2.5 rounded font-mono font-bold text-base transition-all select-none border ${
                         isKeyTransmitting
-                          ? 'bg-[#FF642D] text-white border-[#FF7A45] shadow-[0_0_12px_#FF642D] scale-105'
+                          ? 'bg-[#bd5e3b] text-white border-[#a94c2e] shadow-[0_0_12px_#bd5e3b] scale-105'
                           : isIntersection
-                          ? 'bg-[#FF642D]/20 text-[#FF642D] border-[#FF642D] shadow-[0_0_8px_rgba(255,100,45,0.4)]'
-                          : 'bg-[#12343B] text-[#F4F3EF] border-[#29434A] hover:border-[#9AAEB1]/40'
+                          ? 'bg-[#bd5e3b]/20 text-[#bd5e3b] border-[#bd5e3b] shadow-[0_0_8px_rgba(255,100,45,0.4)]'
+                          : 'bg-[#f0f3ef] text-[#20312e] border-[#dce3df] hover:border-[#667773]/40'
                       }`}
                     >
                       <span>{sym}</span>
-                      <span className="text-[8px] font-normal text-[#9AAEB1] mt-0.5 opacity-80">
+                      <span className="text-[8px] font-normal text-[#667773] mt-0.5 opacity-80">
                         {rowFreq}+{colFreq}
                       </span>
                     </div>
@@ -118,27 +118,27 @@ export const DTMFMatrix: React.FC<DTMFMatrixProps> = ({
       </div>
 
       {/* Active Detection Banner */}
-      <div className="mt-4 pt-3 border-t border-[#29434A] bg-[#07191D] p-3 rounded border font-mono text-xs space-y-1.5">
-        <div className="flex items-center justify-between text-[#9AAEB1]">
+      <div className="mt-4 pt-3 border-t border-[#dce3df] bg-[#f4f5f2] p-3 rounded border font-mono text-xs space-y-1.5">
+        <div className="flex items-center justify-between text-[#667773]">
           <span>LAST DECODED SYMBOL:</span>
-          <span className="text-[#FF642D] font-bold text-base bg-[#12343B] px-2 py-0.5 rounded border border-[#29434A]">
+          <span className="text-[#bd5e3b] font-bold text-base bg-[#f0f3ef] px-2 py-0.5 rounded border border-[#dce3df]">
             {activeSymbol || 'NONE'}
           </span>
         </div>
 
         {latestDetection && (
-          <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-[#29434A]/50">
+          <div className="grid grid-cols-2 gap-2 text-[11px] pt-1 border-t border-[#dce3df]/50">
             <div>
-              <span className="text-[#9AAEB1]">Duration: </span>
-              <span className="text-[#F4F3EF]">{latestDetection.duration_ms} ms</span>
+              <span className="text-[#667773]">Duration: </span>
+              <span className="text-[#20312e]">{latestDetection.duration_ms} ms</span>
             </div>
             <div>
-              <span className="text-[#9AAEB1]">Energy SNR: </span>
-              <span className="text-[#22C55E]">
+              <span className="text-[#667773]">Energy SNR: </span>
+              <span className="text-[#28734f]">
                 {latestDetection.energy_snr ? `${latestDetection.energy_snr.toFixed(1)} dB` : '> 18 dB'}
               </span>
             </div>
-            <div className="col-span-2 text-[10px] text-[#9AAEB1]/70">
+            <div className="col-span-2 text-[10px] text-[#667773]/70">
               Captured: {formatTelemetryTime(latestDetection.timestamp)}
             </div>
           </div>

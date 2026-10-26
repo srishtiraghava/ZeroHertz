@@ -45,40 +45,40 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
 
   const variantStyles: Record<StatusVariant, { bg: string; text: string; border: string; dot: string }> = {
     success: {
-      bg: 'bg-emerald-950/60',
-      text: 'text-emerald-400',
-      border: 'border-emerald-800/80',
-      dot: 'bg-emerald-400',
+      bg: 'bg-[#eaf3ed]',
+      text: 'text-[#28734f]',
+      border: 'border-transparent',
+      dot: 'bg-[#28734f]',
     },
     warning: {
-      bg: 'bg-amber-950/60',
-      text: 'text-amber-400',
-      border: 'border-amber-800/80',
-      dot: 'bg-amber-400',
+      bg: 'bg-[#f8f0e4]',
+      text: 'text-[#8b5c1c]',
+      border: 'border-transparent',
+      dot: 'bg-[#a96c21]',
     },
     error: {
-      bg: 'bg-red-950/60',
-      text: 'text-red-400',
-      border: 'border-red-800/80',
-      dot: 'bg-red-400',
+      bg: 'bg-[#f8ecea]',
+      text: 'text-[#a63f37]',
+      border: 'border-transparent',
+      dot: 'bg-[#b3473e]',
     },
     info: {
-      bg: 'bg-cyan-950/60',
-      text: 'text-cyan-400',
-      border: 'border-cyan-800/80',
-      dot: 'bg-cyan-400',
+      bg: 'bg-[#eaf1f3]',
+      text: 'text-[#426c78]',
+      border: 'border-transparent',
+      dot: 'bg-[#426c78]',
     },
     accent: {
-      bg: 'bg-[#FF642D]/15',
-      text: 'text-[#FF642D]',
-      border: 'border-[#FF642D]/50',
-      dot: 'bg-[#FF642D]',
+      bg: 'bg-[#f8ede8]',
+      text: 'text-[#a94c2e]',
+      border: 'border-transparent',
+      dot: 'bg-[#bd5e3b]',
     },
     neutral: {
-      bg: 'bg-[#12343B]/60',
-      text: 'text-[#9AAEB1]',
-      border: 'border-[#29434A]',
-      dot: 'bg-[#9AAEB1]',
+      bg: 'bg-[#f0f3ef]',
+      text: 'text-[#667773]',
+      border: 'border-transparent',
+      dot: 'bg-[#87958f]',
     },
   };
 
@@ -86,13 +86,13 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[11px] font-mono tracking-wider uppercase border ${style.bg} ${style.text} ${style.border} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded px-2 py-0.5 text-[11px] font-medium ${style.bg} ${style.text} ${className}`}
     >
       {showDot && (
         <span className="relative flex h-2 w-2">
           {pulse && (
             <span
-              className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${style.dot}`}
+              className={` absolute inline-flex h-full w-full rounded-full opacity-75 ${style.dot}`}
             />
           )}
           <span className={`relative inline-flex rounded-full h-2 w-2 ${style.dot}`} />

@@ -102,27 +102,27 @@ export const TranscriptInput: React.FC<TranscriptInputProps> = ({
   };
 
   return (
-    <div className="bg-[#0D252B] border border-[#29434A] rounded p-4 space-y-4">
+    <div className="bg-[#ffffff] border border-[#dce3df] rounded p-4 space-y-4">
       {/* Header with Language selector and ASR toggle */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#29434A] pb-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#dce3df] pb-3">
         <div className="flex items-center gap-2">
-          <Mic className="w-4 h-4 text-[#FF642D]" />
-          <h3 className="font-display text-sm tracking-wide text-[#F4F3EF]">
+          <Mic className="w-4 h-4 text-[#bd5e3b]" />
+          <h3 className="font-display text-sm tracking-wide text-[#20312e]">
             Speech Recognition & Manual Intent Entry
           </h3>
         </div>
 
         <div className="flex items-center gap-3">
           {/* Language Selector */}
-          <div className="flex items-center gap-1.5 text-xs font-mono bg-[#07191D] px-2.5 py-1 rounded border border-[#29434A]">
-            <Globe className="w-3.5 h-3.5 text-[#9AAEB1]" />
+          <div className="flex items-center gap-1.5 text-xs font-mono bg-[#f4f5f2] px-2.5 py-1 rounded border border-[#dce3df]">
+            <Globe className="w-3.5 h-3.5 text-[#667773]" />
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as 'hi-IN' | 'en-IN')}
-              className="bg-transparent text-[#F4F3EF] outline-none text-xs font-bold cursor-pointer"
+              className="bg-transparent text-[#20312e] outline-none text-xs font-bold cursor-pointer"
             >
-              <option value="en-IN" className="bg-[#0D252B]">en-IN (English India)</option>
-              <option value="hi-IN" className="bg-[#0D252B]">hi-IN (हिंदी भारत)</option>
+              <option value="en-IN" className="bg-[#ffffff]">en-IN (English India)</option>
+              <option value="hi-IN" className="bg-[#ffffff]">hi-IN (हिंदी भारत)</option>
             </select>
           </div>
 
@@ -132,8 +132,8 @@ export const TranscriptInput: React.FC<TranscriptInputProps> = ({
             onClick={isListening ? stopListening : startListening}
             className={`px-3 py-1 rounded text-xs font-mono font-bold flex items-center gap-1.5 transition-colors border ${
               isListening
-                ? 'bg-red-950/60 hover:bg-red-900/80 text-red-300 border-red-700/60 animate-pulse'
-                : 'bg-[#FF642D] hover:bg-[#FF7A45] text-white border-transparent'
+                ? 'bg-[#f8ecea] hover:bg-[#f1dedb] text-[#a63f37] border-[#e8cbc7] '
+                : 'bg-[#bd5e3b] hover:bg-[#a94c2e] text-white border-transparent'
             }`}
           >
             {isListening ? (
@@ -153,12 +153,12 @@ export const TranscriptInput: React.FC<TranscriptInputProps> = ({
 
       {/* Textarea for transcript editing */}
       <div className="space-y-1.5">
-        <div className="flex justify-between text-xs font-mono text-[#9AAEB1]">
+        <div className="flex justify-between text-xs font-mono text-[#667773]">
           <span>Citizen Utterance / Intent Input:</span>
           {transcript && (
             <button
               onClick={clearTranscript}
-              className="text-[#9AAEB1] hover:text-[#FF642D] flex items-center gap-1 text-[11px]"
+              className="text-[#667773] hover:text-[#bd5e3b] flex items-center gap-1 text-[11px]"
             >
               <Trash2 className="w-3 h-3" /> Clear Text
             </button>
@@ -175,12 +175,12 @@ export const TranscriptInput: React.FC<TranscriptInputProps> = ({
                 ? 'अपनी आवश्यकता यहाँ बोलें या लिखें... (उदा. मेरी पेंशन की समस्या दर्ज करें)'
                 : 'Speak or type citizen request here... (e.g. Schedule an urgent appointment at AIIMS)'
             }
-            className="w-full bg-[#07191D] border border-[#29434A] rounded p-3 font-mono text-sm text-[#F4F3EF] placeholder-[#9AAEB1]/40 focus:outline-none focus:border-[#FF642D] resize-none leading-relaxed"
+            className="w-full bg-[#f4f5f2] border border-[#dce3df] rounded p-3 font-mono text-sm text-[#20312e] placeholder-[#667773]/40 focus:outline-none focus:border-[#bd5e3b] resize-none leading-relaxed"
           />
 
           {/* Interim speech recognition preview */}
           {interimTranscript && (
-            <div className="absolute bottom-2 left-3 right-3 text-xs font-mono text-[#FF642D]/80 truncate bg-[#07191D]/90 px-1 py-0.5 rounded">
+            <div className="absolute bottom-2 left-3 right-3 text-xs font-mono text-[#bd5e3b]/80 truncate bg-[#f4f5f2]/90 px-1 py-0.5 rounded">
               [ASR Streaming]: {interimTranscript}
             </div>
           )}
@@ -188,7 +188,7 @@ export const TranscriptInput: React.FC<TranscriptInputProps> = ({
       </div>
 
       {speechError && (
-        <div className="text-xs font-mono text-amber-400 bg-amber-950/30 p-2.5 rounded border border-amber-800/60 flex items-center gap-2">
+        <div className="text-xs font-mono text-[#8b5c1c] bg-[#f8f0e4] p-2.5 rounded border border-[#ead9bd] flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{speechError}</span>
         </div>
@@ -196,14 +196,14 @@ export const TranscriptInput: React.FC<TranscriptInputProps> = ({
 
       {/* Action Submit Button */}
       <div className="flex items-center justify-between pt-1">
-        <div className="text-[11px] font-mono text-[#9AAEB1]">
-          Endpoint: <span className="text-[#F4F3EF]">POST /api/execute-intent</span>
+        <div className="text-[11px] font-mono text-[#667773]">
+          Endpoint: <span className="text-[#20312e]">POST /api/execute-intent</span>
         </div>
 
         <button
           onClick={handleSubmitIntent}
           disabled={!transcript.trim() || isExecuting}
-          className="px-5 py-2.5 rounded bg-[#FF642D] hover:bg-[#FF7A45] text-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 disabled:opacity-50 transition-colors shadow-sm"
+          className="px-5 py-2.5 rounded bg-[#bd5e3b] hover:bg-[#a94c2e] text-white text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-2 disabled:opacity-50 transition-colors shadow-sm"
         >
           <Send className="w-4 h-4" />
           {isExecuting ? 'Parsing Intent & Launching...' : 'Submit Intent for Execution'}
@@ -212,7 +212,7 @@ export const TranscriptInput: React.FC<TranscriptInputProps> = ({
 
       {/* Execution Error Banner */}
       {executionError && (
-        <div className="text-xs font-mono text-red-400 bg-red-950/30 p-3 rounded border border-red-800/60 flex items-center gap-2">
+        <div className="text-xs font-mono text-[#a63f37] bg-[#f8ecea] p-3 rounded border border-[#e8cbc7] flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <div>
             <strong className="block font-bold">Execution Error:</strong>
@@ -223,12 +223,12 @@ export const TranscriptInput: React.FC<TranscriptInputProps> = ({
 
       {/* Schema Validation Errors */}
       {validationErrors.length > 0 && (
-        <div className="bg-red-950/20 border border-red-800/80 rounded p-3 text-xs font-mono space-y-1">
-          <div className="text-red-400 font-bold flex items-center gap-1.5 uppercase">
+        <div className="bg-[#f8ecea] border border-[#e8cbc7] rounded p-3 text-xs font-mono space-y-1">
+          <div className="text-[#a63f37] font-bold flex items-center gap-1.5 uppercase">
             <AlertCircle className="w-4 h-4" />
             Schema Validation Violations ({validationErrors.length})
           </div>
-          <ul className="list-disc pl-5 text-red-300 space-y-0.5">
+          <ul className="list-disc pl-5 text-[#a63f37] space-y-0.5">
             {validationErrors.map((err, i) => (
               <li key={i}>{err}</li>
             ))}
@@ -238,19 +238,19 @@ export const TranscriptInput: React.FC<TranscriptInputProps> = ({
 
       {/* Parsed JSON Response Display */}
       {parsedResponse && (
-        <div className="bg-[#07191D] border border-[#22C55E]/40 rounded p-3 font-mono text-xs space-y-2">
+        <div className="bg-[#f4f5f2] border border-[#28734f]/40 rounded p-3 font-mono text-xs space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[#22C55E] font-bold flex items-center gap-1.5 uppercase">
-              <CheckCircle2 className="w-4 h-4 text-[#22C55E]" />
+            <span className="text-[#28734f] font-bold flex items-center gap-1.5 uppercase">
+              <CheckCircle2 className="w-4 h-4 text-[#28734f]" />
               Intent Successfully Parsed & Automation Initialized
             </span>
-            <span className="text-[#9AAEB1] text-[10px]">
+            <span className="text-[#667773] text-[10px]">
               CONF: {formatConfidence(parsedResponse.intent?.confidence)}
             </span>
           </div>
 
-          <div className="bg-[#0D252B] p-2.5 rounded border border-[#29434A] max-h-56 overflow-y-auto">
-            <pre className="text-[#22C55E] text-[11px] leading-relaxed">
+          <div className="bg-[#ffffff] p-2.5 rounded border border-[#dce3df] max-h-56 overflow-y-auto">
+            <pre className="text-[#28734f] text-[11px] leading-relaxed">
               {JSON.stringify(parsedResponse, null, 2)}
             </pre>
           </div>

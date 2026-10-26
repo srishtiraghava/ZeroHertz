@@ -8,18 +8,14 @@ interface AppShellProps {
 
 export const AppShell: React.FC<AppShellProps> = ({ children }) => {
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-[#07191D] text-[#F4F3EF]">
-      {/* Sidebar Navigation */}
+    <div className="flex h-dvh min-h-[480px] w-full overflow-hidden bg-[#f4f5f2] text-[#20312e]">
       <Sidebar />
 
-      {/* Main Content Area */}
-      <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
-        {/* Top Telemetry Status Bar */}
+      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
         <TopBar />
 
-        {/* Viewport Content with scanlines pattern overlay */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6 bg-[#07191D] relative scanlines">
-          <div className="max-w-7xl mx-auto space-y-6">
+        <main className="min-h-0 flex-1 overflow-y-auto bg-[#f4f5f2] px-3 py-4 sm:px-5 sm:py-6 lg:px-8">
+          <div className="mx-auto w-full max-w-[1440px] space-y-5 sm:space-y-6">
             {children}
           </div>
         </main>

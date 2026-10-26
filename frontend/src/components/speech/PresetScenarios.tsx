@@ -60,15 +60,15 @@ export const PRESET_SCENARIOS: PresetScenario[] = [
 
 export const PresetScenarios: React.FC<PresetScenariosProps> = ({ onSelectScenario }) => {
   return (
-    <div className="bg-[#0D252B] border border-[#29434A] rounded p-4 space-y-3">
-      <div className="flex items-center justify-between border-b border-[#29434A] pb-2">
+    <div className="bg-[#ffffff] border border-[#dce3df] rounded p-4 space-y-3">
+      <div className="flex items-center justify-between border-b border-[#dce3df] pb-2">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-[#FF642D]" />
-          <h3 className="font-display text-sm tracking-wide text-[#F4F3EF]">
+          <Sparkles className="w-4 h-4 text-[#bd5e3b]" />
+          <h3 className="font-display text-sm tracking-wide text-[#20312e]">
             Preset Citizen Automation Scenarios
           </h3>
         </div>
-        <span className="text-[10px] font-mono text-[#9AAEB1]">
+        <span className="text-[10px] font-mono text-[#667773]">
           Click to load into editor (No auto-submit)
         </span>
       </div>
@@ -86,31 +86,31 @@ export const PresetScenarios: React.FC<PresetScenariosProps> = ({ onSelectScenar
             sc.id === 'healthcare'
               ? 'text-cyan-400'
               : sc.id === 'pension'
-              ? 'text-amber-400'
-              : 'text-red-400';
+              ? 'text-[#8b5c1c]'
+              : 'text-[#a63f37]';
 
           return (
             <button
               key={sc.id}
               onClick={() => onSelectScenario(sc)}
-              className="text-left bg-[#07191D] hover:bg-[#12343B] p-3 rounded border border-[#29434A] hover:border-[#FF642D]/60 transition-all flex flex-col justify-between group"
+              className="text-left bg-[#f4f5f2] hover:bg-[#f0f3ef] p-3 rounded border border-[#dce3df] hover:border-[#bd5e3b]/60 transition-all flex flex-col justify-between group"
             >
               <div>
                 <div className="flex items-center justify-between gap-1 mb-1.5">
-                  <span className="font-bold text-xs text-[#F4F3EF] group-hover:text-[#FF642D] transition-colors flex items-center gap-1.5">
+                  <span className="font-bold text-xs text-[#20312e] group-hover:text-[#bd5e3b] transition-colors flex items-center gap-1.5">
                     <Icon className={`w-3.5 h-3.5 ${iconColor}`} />
                     {sc.title}
                   </span>
-                  <span className="text-[10px] font-mono bg-[#12343B] text-[#9AAEB1] px-1.5 py-0.5 rounded border border-[#29434A]">
+                  <span className="text-[10px] font-mono bg-[#f0f3ef] text-[#667773] px-1.5 py-0.5 rounded border border-[#dce3df]">
                     {sc.language}
                   </span>
                 </div>
-                <p className="text-[11px] text-[#9AAEB1] line-clamp-2 leading-relaxed">
+                <p className="text-[11px] text-[#667773] line-clamp-2 leading-relaxed">
                   {sc.description}
                 </p>
               </div>
 
-              <div className="mt-2.5 pt-2 border-t border-[#29434A]/50 flex items-center justify-between text-[10px] font-mono text-[#FF642D]">
+              <div className="mt-2.5 pt-2 border-t border-[#dce3df]/50 flex items-center justify-between text-[10px] font-mono text-[#bd5e3b]">
                 <span>LOAD SCENARIO</span>
                 <span>→</span>
               </div>

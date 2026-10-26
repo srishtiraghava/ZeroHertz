@@ -22,7 +22,7 @@ export const MetricsRow: React.FC = () => {
       sub: 'DSP Decoders Active',
       icon: Activity,
       badge: <StatusBadge status={acousticEngineState} pulse={acousticEngineState === 'transmitting'} />,
-      color: 'border-[#29434A]',
+      color: 'border-[#dce3df]',
     },
     {
       label: 'Microphone Hardware',
@@ -30,7 +30,7 @@ export const MetricsRow: React.FC = () => {
       sub: 'Audio Ingest Stream',
       icon: Mic,
       badge: <StatusBadge status={micState} pulse={micState === 'active'} />,
-      color: 'border-[#29434A]',
+      color: 'border-[#dce3df]',
     },
     {
       label: 'Backend & WebSocket',
@@ -38,7 +38,7 @@ export const MetricsRow: React.FC = () => {
       sub: 'Bi-directional Bus',
       icon: Wifi,
       badge: <StatusBadge status={wsState} pulse={wsState === 'connecting'} />,
-      color: 'border-[#29434A]',
+      color: 'border-[#dce3df]',
     },
     {
       label: 'Pending Confirmations',
@@ -49,28 +49,28 @@ export const MetricsRow: React.FC = () => {
         <span
           className={`text-xs font-mono font-bold px-2 py-0.5 rounded border ${
             metrics.pending_confirmation_count > 0
-              ? 'bg-[#FF642D]/20 text-[#FF642D] border-[#FF642D]/60 animate-pulse'
-              : 'bg-[#12343B] text-[#9AAEB1] border-[#29434A]'
+              ? 'bg-[#bd5e3b]/20 text-[#bd5e3b] border-[#bd5e3b]/60 '
+              : 'bg-[#f0f3ef] text-[#667773] border-[#dce3df]'
           }`}
         >
           {metrics.pending_confirmation_count > 0 ? 'ALERT' : 'CLEAR'}
         </span>
       ),
-      color: metrics.pending_confirmation_count > 0 ? 'border-[#FF642D]/50' : 'border-[#29434A]',
+      color: metrics.pending_confirmation_count > 0 ? 'border-[#bd5e3b]/50' : 'border-[#dce3df]',
     },
     {
       label: 'Total Sessions',
       value: metrics.total_sessions,
       sub: 'Lifetime Ingest Count',
       icon: Layers,
-      color: 'border-[#29434A]',
+      color: 'border-[#dce3df]',
     },
     {
       label: 'Completed Transactions',
       value: metrics.completed_transactions,
       sub: 'Acoustically Verified',
       icon: CheckCircle2,
-      badge: <span className="text-xs font-mono text-[#22C55E]">100% AUDITED</span>,
+      badge: <span className="text-xs font-mono text-[#28734f]">100% AUDITED</span>,
       color: 'border-emerald-900/60',
     },
     {
@@ -81,13 +81,13 @@ export const MetricsRow: React.FC = () => {
       badge: (
         <span
           className={`text-xs font-mono ${
-            metrics.failed_rejected_transactions > 0 ? 'text-red-400' : 'text-[#9AAEB1]'
+            metrics.failed_rejected_transactions > 0 ? 'text-[#a63f37]' : 'text-[#667773]'
           }`}
         >
           ANOMALIES
         </span>
       ),
-      color: metrics.failed_rejected_transactions > 0 ? 'border-red-900/60' : 'border-[#29434A]',
+      color: metrics.failed_rejected_transactions > 0 ? 'border-red-900/60' : 'border-[#dce3df]',
     },
   ];
 
@@ -98,23 +98,23 @@ export const MetricsRow: React.FC = () => {
         return (
           <div
             key={idx}
-            className={`bg-[#0D252B] p-3.5 rounded border ${card.color} shadow-sm hover:border-[#FF642D]/40 transition-colors flex flex-col justify-between`}
+            className={`bg-[#ffffff] p-3.5 rounded border ${card.color} shadow-sm hover:border-[#bd5e3b]/40 transition-colors flex flex-col justify-between`}
           >
             <div className="flex items-center justify-between gap-1 mb-2">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-[#9AAEB1] truncate">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-[#667773] truncate">
                 {card.label}
               </span>
-              <Icon className="w-3.5 h-3.5 text-[#FF642D] shrink-0" />
+              <Icon className="w-3.5 h-3.5 text-[#bd5e3b] shrink-0" />
             </div>
 
             <div className="flex items-baseline justify-between gap-2 my-1">
-              <span className="text-xl font-bold font-mono tracking-tight text-[#F4F3EF]">
+              <span className="text-xl font-bold font-mono tracking-tight text-[#20312e]">
                 {card.value}
               </span>
               {card.badge}
             </div>
 
-            <span className="text-[10px] text-[#9AAEB1]/70 truncate mt-1">
+            <span className="text-[10px] text-[#667773]/70 truncate mt-1">
               {card.sub}
             </span>
           </div>

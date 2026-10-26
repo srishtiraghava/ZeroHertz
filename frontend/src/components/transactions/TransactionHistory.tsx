@@ -100,14 +100,14 @@ export const TransactionHistory: React.FC = () => {
   );
 
   return (
-    <div className="bg-[#0D252B] border border-[#29434A] rounded p-5 space-y-4">
+    <div className="bg-[#ffffff] border border-[#dce3df] rounded p-5 space-y-4">
       {/* Header & Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#29434A] pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#dce3df] pb-4">
         <div>
-          <h3 className="font-display text-base text-[#F4F3EF] tracking-wider uppercase">
+          <h3 className="font-display text-base text-[#20312e] tracking-wider uppercase">
             Transaction History & Air-Gapped Verification Ledger
           </h3>
-          <p className="text-xs text-[#9AAEB1] font-mono mt-0.5">
+          <p className="text-xs text-[#667773] font-mono mt-0.5">
             GET /api/transactions — All citizen identifiers cryptographically masked
           </p>
         </div>
@@ -115,7 +115,7 @@ export const TransactionHistory: React.FC = () => {
         <button
           onClick={fetchTx}
           disabled={loading}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#12343B] hover:bg-[#12343B]/80 text-[#9AAEB1] hover:text-[#F4F3EF] text-xs font-mono border border-[#29434A] transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#f0f3ef] hover:bg-[#f0f3ef]/80 text-[#667773] hover:text-[#20312e] text-xs font-mono border border-[#dce3df] transition-colors"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
           <span>Refresh</span>
@@ -126,7 +126,7 @@ export const TransactionHistory: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 text-xs font-mono">
         {/* Search */}
         <div className="relative">
-          <Search className="w-3.5 h-3.5 absolute left-3 top-3 text-[#9AAEB1]" />
+          <Search className="w-3.5 h-3.5 absolute left-3 top-3 text-[#667773]" />
           <input
             type="text"
             value={searchQuery}
@@ -135,44 +135,44 @@ export const TransactionHistory: React.FC = () => {
               setCurrentPage(1);
             }}
             placeholder="Search TX ID, Session, Service..."
-            className="w-full bg-[#07191D] border border-[#29434A] rounded pl-8 pr-3 py-2 text-[#F4F3EF] placeholder-[#9AAEB1]/50 focus:outline-none focus:border-[#FF642D]"
+            className="w-full bg-[#f4f5f2] border border-[#dce3df] rounded pl-8 pr-3 py-2 text-[#20312e] placeholder-[#667773]/50 focus:outline-none focus:border-[#bd5e3b]"
           />
         </div>
 
         {/* Status Filter */}
-        <div className="flex items-center gap-1.5 bg-[#07191D] border border-[#29434A] rounded px-3 py-2">
-          <Filter className="w-3.5 h-3.5 text-[#9AAEB1]" />
+        <div className="flex items-center gap-1.5 bg-[#f4f5f2] border border-[#dce3df] rounded px-3 py-2">
+          <Filter className="w-3.5 h-3.5 text-[#667773]" />
           <select
             value={statusFilter}
             onChange={(e) => {
               setStatusFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full bg-transparent text-[#F4F3EF] outline-none cursor-pointer"
+            className="w-full bg-transparent text-[#20312e] outline-none cursor-pointer"
           >
-            <option value="all" className="bg-[#0D252B]">ALL STATUSES</option>
-            <option value="completed" className="bg-[#0D252B]">COMPLETED</option>
-            <option value="pending" className="bg-[#0D252B]">PENDING</option>
-            <option value="in_progress" className="bg-[#0D252B]">IN PROGRESS</option>
-            <option value="failed" className="bg-[#0D252B]">FAILED</option>
-            <option value="rejected" className="bg-[#0D252B]">REJECTED</option>
+            <option value="all" className="bg-[#ffffff]">ALL STATUSES</option>
+            <option value="completed" className="bg-[#ffffff]">COMPLETED</option>
+            <option value="pending" className="bg-[#ffffff]">PENDING</option>
+            <option value="in_progress" className="bg-[#ffffff]">IN PROGRESS</option>
+            <option value="failed" className="bg-[#ffffff]">FAILED</option>
+            <option value="rejected" className="bg-[#ffffff]">REJECTED</option>
           </select>
         </div>
 
         {/* Service Filter */}
-        <div className="flex items-center gap-1.5 bg-[#07191D] border border-[#29434A] rounded px-3 py-2">
-          <Layers className="w-3.5 h-3.5 text-[#9AAEB1]" />
+        <div className="flex items-center gap-1.5 bg-[#f4f5f2] border border-[#dce3df] rounded px-3 py-2">
+          <Layers className="w-3.5 h-3.5 text-[#667773]" />
           <select
             value={serviceFilter}
             onChange={(e) => {
               setServiceFilter(e.target.value);
               setCurrentPage(1);
             }}
-            className="w-full bg-transparent text-[#F4F3EF] outline-none cursor-pointer"
+            className="w-full bg-transparent text-[#20312e] outline-none cursor-pointer"
           >
-            <option value="all" className="bg-[#0D252B]">ALL SERVICES</option>
+            <option value="all" className="bg-[#ffffff]">ALL SERVICES</option>
             {uniqueServices.map((svc) => (
-              <option key={svc} value={svc} className="bg-[#0D252B]">
+              <option key={svc} value={svc} className="bg-[#ffffff]">
                 {svc.toUpperCase()}
               </option>
             ))}
@@ -182,20 +182,20 @@ export const TransactionHistory: React.FC = () => {
         {/* Sort Order */}
         <button
           onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-          className="flex items-center justify-between bg-[#07191D] border border-[#29434A] hover:border-[#FF642D]/60 rounded px-3 py-2 text-[#9AAEB1] hover:text-[#F4F3EF] transition-colors"
+          className="flex items-center justify-between bg-[#f4f5f2] border border-[#dce3df] hover:border-[#bd5e3b]/60 rounded px-3 py-2 text-[#667773] hover:text-[#20312e] transition-colors"
         >
           <span className="flex items-center gap-1.5">
-            <ArrowUpDown className="w-3.5 h-3.5 text-[#FF642D]" />
+            <ArrowUpDown className="w-3.5 h-3.5 text-[#bd5e3b]" />
             Sort by Time
           </span>
-          <span className="font-bold text-[#FF642D] uppercase">{sortOrder}</span>
+          <span className="font-bold text-[#bd5e3b] uppercase">{sortOrder}</span>
         </button>
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded border border-[#29434A]">
+      <div className="overflow-x-auto rounded border border-[#dce3df]">
         <table className="w-full text-left font-mono text-xs">
-          <thead className="bg-[#07191D] text-[#9AAEB1] border-b border-[#29434A] uppercase text-[10px] tracking-wider select-none">
+          <thead className="bg-[#f4f5f2] text-[#667773] border-b border-[#dce3df] uppercase text-[10px] tracking-wider select-none">
             <tr>
               <th className="py-3 px-3">Transaction ID</th>
               <th className="py-3 px-3">Session</th>
@@ -206,16 +206,16 @@ export const TransactionHistory: React.FC = () => {
               <th className="py-3 px-3">Receipt</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#29434A]/50 bg-[#0D252B]">
+          <tbody className="divide-y divide-[#dce3df]/50 bg-[#ffffff]">
             {loading && transactions.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-10 text-center text-[#9AAEB1]">
+                <td colSpan={7} className="py-10 text-center text-[#667773]">
                   Loading transactions from database...
                 </td>
               </tr>
             ) : paginatedTransactions.length === 0 ? (
               <tr>
-                <td colSpan={7} className="py-10 text-center text-[#9AAEB1]">
+                <td colSpan={7} className="py-10 text-center text-[#667773]">
                   No transaction records matched the active filter criteria.
                 </td>
               </tr>
@@ -224,26 +224,26 @@ export const TransactionHistory: React.FC = () => {
                 <tr
                   key={tx.transaction_id || tx.id}
                   onClick={() => setSelectedTx(tx)}
-                  className="hover:bg-[#12343B] transition-colors cursor-pointer group"
+                  className="hover:bg-[#f0f3ef] transition-colors cursor-pointer group"
                 >
-                  <td className="py-3 px-3 text-[#FF642D] font-bold group-hover:underline">
+                  <td className="py-3 px-3 text-[#bd5e3b] font-bold group-hover:underline">
                     {tx.id || tx.transaction_id}
                   </td>
-                  <td className="py-3 px-3 text-[#9AAEB1]">{tx.session_id.slice(0, 10)}</td>
-                  <td className="py-3 px-3 text-[#F4F3EF] uppercase font-semibold">
+                  <td className="py-3 px-3 text-[#667773]">{tx.session_id.slice(0, 10)}</td>
+                  <td className="py-3 px-3 text-[#20312e] uppercase font-semibold">
                     {tx.service_type || '—'}
                   </td>
-                  <td className="py-3 px-3 text-[#9AAEB1] flex items-center gap-1.5">
-                    <Lock className="w-3 h-3 text-[#22C55E]" />
+                  <td className="py-3 px-3 text-[#667773] flex items-center gap-1.5">
+                    <Lock className="w-3 h-3 text-[#28734f]" />
                     {redactSensitive(tx.citizen_id || (tx.details as any)?.beneficiary_id || '982348194481')}
                   </td>
                   <td className="py-3 px-3">
                     <StatusBadge status={tx.status} />
                   </td>
-                  <td className="py-3 px-3 text-[#9AAEB1]">
+                  <td className="py-3 px-3 text-[#667773]">
                     {formatDateTime(tx.created_at)}
                   </td>
-                  <td className="py-3 px-3 text-[#22C55E] font-bold">
+                  <td className="py-3 px-3 text-[#28734f] font-bold">
                     {(tx as any).receipt_id || tx.receipt_reference_id || '—'}
                   </td>
                 </tr>
@@ -254,7 +254,7 @@ export const TransactionHistory: React.FC = () => {
       </div>
 
       {/* Pagination Footer */}
-      <div className="flex items-center justify-between pt-2 text-xs font-mono text-[#9AAEB1]">
+      <div className="flex items-center justify-between pt-2 text-xs font-mono text-[#667773]">
         <div>
           Showing {paginatedTransactions.length} of {filteredTransactions.length} transactions
         </div>
@@ -263,17 +263,17 @@ export const TransactionHistory: React.FC = () => {
           <button
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage <= 1}
-            className="p-1.5 rounded bg-[#07191D] border border-[#29434A] hover:bg-[#12343B] text-[#9AAEB1] hover:text-[#F4F3EF] disabled:opacity-40 disabled:pointer-events-none transition-colors"
+            className="p-1.5 rounded bg-[#f4f5f2] border border-[#dce3df] hover:bg-[#f0f3ef] text-[#667773] hover:text-[#20312e] disabled:opacity-40 disabled:pointer-events-none transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
           <span>
-            Page <strong className="text-[#F4F3EF]">{currentPage}</strong> of {totalPages}
+            Page <strong className="text-[#20312e]">{currentPage}</strong> of {totalPages}
           </span>
           <button
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage >= totalPages}
-            className="p-1.5 rounded bg-[#07191D] border border-[#29434A] hover:bg-[#12343B] text-[#9AAEB1] hover:text-[#F4F3EF] disabled:opacity-40 disabled:pointer-events-none transition-colors"
+            className="p-1.5 rounded bg-[#f4f5f2] border border-[#dce3df] hover:bg-[#f0f3ef] text-[#667773] hover:text-[#20312e] disabled:opacity-40 disabled:pointer-events-none transition-colors"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
